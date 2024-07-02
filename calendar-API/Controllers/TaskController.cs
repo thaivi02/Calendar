@@ -1,5 +1,7 @@
 ﻿using calendar_API.DTOs.TaskDto;
+using calendar_API.Helpers;
 using calendar_API.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -17,6 +19,7 @@ public class TaskController : ControllerBase
     }
 
     [HttpGet]
+    [Authorize(Roles = AppRole.User)]
     public async Task<ActionResult<IEnumerable<TaskResponse>>> GetTasks(int? taskId)
     {
         IQueryable<TodoTask> query = _context.TodoTasks.Include(t => t.Priority);
@@ -40,6 +43,7 @@ public class TaskController : ControllerBase
     }
 
     [HttpGet]
+    [Authorize(Roles = AppRole.User)]
     public async Task<ActionResult<IEnumerable<TaskResponse>>> GetTasksByDate(DateTime date)
     {
         var tasks = await _context.TodoTasks
@@ -59,6 +63,7 @@ public class TaskController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Roles = AppRole.User)]
     public async Task<ActionResult<TodoTask>> AddTask(TaskRequest task)
     {
         var newTask = new TodoTask
