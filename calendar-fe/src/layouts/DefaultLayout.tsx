@@ -5,8 +5,8 @@ import {Outlet} from "react-router-dom";
 import NavigationBar from "./NavigationBar";
 
 const headerStyle: React.CSSProperties = {
-    height: 80,
-    lineHeight: '80px',
+    height: 60,
+    lineHeight: '60px',
     backgroundColor: 'wheat',
 };
 

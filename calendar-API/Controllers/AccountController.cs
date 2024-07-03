@@ -83,7 +83,7 @@ public class AccountController : ControllerBase
         var token = new JwtSecurityToken(
             issuer: _configuration["JWT:ValidIssuer"],
             audience: _configuration["JWT:ValidAudience"],
-            expires: DateTime.Now.AddMinutes(30),  // Token will expire after 1 hour
+            expires: DateTime.Now.AddMinutes(120),  // Token will expire after 1 hour
             claims: authClaims,
             signingCredentials: new SigningCredentials(authKey, SecurityAlgorithms.HmacSha256)
         );

@@ -1,28 +1,23 @@
 ﻿import React from 'react';
-import {NavLink} from "react-router-dom";
+import {NavLink, useNavigate} from "react-router-dom";
 
-const rightLink = [
-    {
-        title: "Login",
-        path: "/login"
-    },
-    {
-        title: "Register",
-        path: "/register"
-    }
-]
 
 const NavigationBar = () => {
+    
+    const navigate = useNavigate();
+    const handleLogout = () => {
+        localStorage.clear()
+    }
     return (
         <div className="relative">
-            <div className="absolute end-0">
-                {rightLink.map((e) => {
-                    return (
-                        <NavLink to={e.path} key={e.path}>
-                            {e.title.toLowerCase()}
-                        </NavLink>
-                    )
-                })}
+            <div className="absolute top-0 end-0">
+                <NavLink
+                    to="/login"
+                    className="p-2 ml-2 text-lg rounded hover:bg-gray-200 font-semibold text-gray-700"
+                    onClick={handleLogout}
+                >
+                    Logout
+                </NavLink>
             </div>
         </div>
     );

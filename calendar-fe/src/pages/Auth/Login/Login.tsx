@@ -4,7 +4,7 @@ import agent from "../../../api/agent";
 import Title from "antd/es/typography/Title";
 import {toast, ToastContainer} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
-import {useNavigate} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 
 type FieldType = {
     userName?: string;
@@ -56,11 +56,16 @@ function Login() {
                         <Input.Password/>
                     </Form.Item>
 
-                    <Form.Item wrapperCol={{offset: 8, span: 16}}>
+                    <Form.Item className="flex justify-center" wrapperCol={{offset: 8, span: 16}}>
                         <Button type="primary" htmlType="submit">
                             Login
                         </Button>
                     </Form.Item>
+                    
+                    <div className="w-full flex justify-center">
+                        <Link to="/register">Register a new account</Link>
+                    </div>
+                     
                 </Form>
                 <ToastContainer/>
             </div>

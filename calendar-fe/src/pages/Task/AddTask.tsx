@@ -92,9 +92,27 @@ const AddTask: React.FC = () => {
                     <TimePicker format="HH:mm:ss"/>
                 </Form.Item>
 
-                <Form.Item name="endTime" label="End Time"
-                           rules={[{required: true, message: 'Please choose End Time!'}]}>
-                    <TimePicker format="HH:mm:ss"/>
+                <Form.Item
+                    name="endTime"
+                    label="End Time"
+                    dependencies={['startTime']} // Declare dependency on startTime to re-validate when startTime changes
+                    rules={[
+                        { required: true },
+                        ({ getFieldValue }) => ({
+                            validator(_, value) {
+                                if (!value) {
+                                    return Promise.reject(new Error('Please choose End Time!'));
+                                }
+                                const startTime = getFieldValue('startTime');
+                                if (startTime && value.isBefore(startTime)) {
+                                    return Promise.reject(new Error('End Time must be greater than Start Time!'));
+                                }
+                                return Promise.resolve();
+                            },
+                        }),
+                    ]}
+                >
+                    <TimePicker format="HH:mm:ss" />
                 </Form.Item>
 
                 <Form.Item

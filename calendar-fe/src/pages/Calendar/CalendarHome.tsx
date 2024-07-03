@@ -20,15 +20,15 @@ const CalendarHome: React.FC = () => {
                 setTasks(data)
             })
             .catch(error => console.log(error))
-    }, []);
+    }, [tasks]);
 
     const {token} = theme.useToken();
 
     const wrapperStyle: React.CSSProperties = {
-        maxWidth: '100%', // Responsive width
+        maxWidth: '100%', 
         border: `1px solid ${token.colorBorderSecondary}`,
         borderRadius: token.borderRadiusLG,
-        margin: '0 auto', // Center the calendar
+        margin: '0 auto', 
     };
 
     const getListData = (value: Dayjs) => {

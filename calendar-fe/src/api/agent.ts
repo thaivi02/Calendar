@@ -30,8 +30,6 @@ const Priority={
 const auth = {
     login: (user: any) => axios.post('account/login', user).then(responseBody),
     register: (user: any) => axios.post('account/signup', user).then(responseBody),
-    current: () => axios.get('account/current').then(responseBody),
-    logout: () => axios.post('account/logout').then(responseBody),
 }
 
 const agent ={
