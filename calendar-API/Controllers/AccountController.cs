@@ -68,7 +68,7 @@ public class AccountController : ControllerBase
 
         var authClaims = new List<Claim>
         {
-            new(ClaimTypes.Name, loginDto.UserName),
+            new(ClaimTypes.NameIdentifier, user.Id),
             new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
         };
 

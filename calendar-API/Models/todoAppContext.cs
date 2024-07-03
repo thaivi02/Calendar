@@ -67,6 +67,12 @@ namespace calendar_API.Models
                     .HasForeignKey(d => d.PriorityId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_TodoTask_Priority");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.TodoTasks)
+                    .HasForeignKey(d => d.UserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_TodoTask_User");
             });
 
             OnModelCreatingPartial(modelBuilder);

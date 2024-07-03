@@ -3,6 +3,7 @@ import {App} from "antd";
 import DefaultLayout from "./layouts/DefaultLayout";
 import CalendarHome from "./pages/Calendar/CalendarHome";
 import TaskList from "./pages/TaskList/TaskList";
+import Login from "./pages/Auth/Login/Login";
 
 const router = createBrowserRouter([
     {
@@ -18,6 +19,10 @@ const router = createBrowserRouter([
                 element:<TaskList/>
             }
         ]
+    },
+    {
+        path:"/login",
+        element:<Login/>
     }
 ])
 

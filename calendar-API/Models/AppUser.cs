@@ -9,4 +9,5 @@ public class AppUser : IdentityUser
     [MaxLength(100)]
     [Required]
     public string FullName { get; set; } = null!;
-}
+    public virtual ICollection<TodoTask> TodoTasks { get; set; } = new List<TodoTask>();
+ }

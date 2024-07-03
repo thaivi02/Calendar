@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using calendar_API.Models;
 
@@ -11,9 +12,10 @@ using calendar_API.Models;
 namespace calendar_API.Migrations
 {
     [DbContext(typeof(todoappContext))]
-    partial class todoappContextModelSnapshot : ModelSnapshot
+    [Migration("20240702091011_AddUserIdToTodoTask")]
+    partial class AddUserIdToTodoTask
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

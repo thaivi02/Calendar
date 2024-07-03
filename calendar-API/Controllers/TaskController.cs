@@ -1,4 +1,5 @@
-﻿using calendar_API.DTOs.TaskDto;
+﻿using System.Security.Claims;
+using calendar_API.DTOs.TaskDto;
 using calendar_API.Helpers;
 using calendar_API.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -22,7 +23,9 @@ public class TaskController : ControllerBase
     [Authorize(Roles = AppRole.User)]
     public async Task<ActionResult<IEnumerable<TaskResponse>>> GetTasks(int? taskId)
     {
-        IQueryable<TodoTask> query = _context.TodoTasks.Include(t => t.Priority);
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        IQueryable<TodoTask> query = _context.TodoTasks.Include(t => t.Priority)
+            .Where(t => t.UserId == userId);
 
         if (taskId.HasValue)
         {
@@ -66,6 +69,11 @@ public class TaskController : ControllerBase
     [Authorize(Roles = AppRole.User)]
     public async Task<ActionResult<TodoTask>> AddTask(TaskRequest task)
     {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        if (userId == null)
+            return Unauthorized("Invalid user");
+
         var newTask = new TodoTask
         {
             Title = task.Title,
@@ -74,15 +82,15 @@ public class TaskController : ControllerBase
             StartTime = task.StartTime,
             EndTime = task.EndTime,
             PriorityId = task.PriorityId,
+            UserId = userId
         };
 
         _context.TodoTasks.Add(newTask);
         await _context.SaveChangesAsync();
 
-        
         return Ok(newTask);
     }
-    
+
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Priority>>> GetPriorities()
     {
