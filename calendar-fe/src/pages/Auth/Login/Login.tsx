@@ -63,7 +63,7 @@ function Login() {
                     </Form.Item>
                     
                     <div className="w-full flex justify-center">
-                        <Link to="/register">Register a new account</Link>
+                        <Link to="/auth/register">Register a new account</Link>
                     </div>
                      
                 </Form>

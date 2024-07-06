@@ -3,26 +3,27 @@ import DefaultLayout from "../layouts/DefaultLayout";
 import PrivateRoute from "./PrivateRoute";
 import React from "react";
 import CalendarHome from "../pages/Calendar/CalendarHome";
-import TaskList from "../pages/TaskList/TaskList";
 import {Login} from "../pages/Auth/Login";
 import {Register} from "../pages/Auth/Register";
+import PublicRoute from "./PublicRoute";
+import {TaskList} from "../pages/Task";
 
 
 const router = createBrowserRouter([
     {
-        path: "/",
+        path: '/',
         element: <DefaultLayout />,
         children: [
             {
-                path: "/",
-                element: <PrivateRoute />,
+                path: '/',
+                element: <PrivateRoute />, // Protect private routes
                 children: [
                     {
-                        path: "/",
+                        path: '/',
                         element: <CalendarHome />,
                     },
                     {
-                        path: "/taskList",
+                        path: 'taskList',
                         element: <TaskList />,
                     },
                 ],
@@ -30,13 +31,19 @@ const router = createBrowserRouter([
         ],
     },
     {
-        path: "/login",
-        element: <Login/>,
+        path: '/auth',
+        element: <PublicRoute />, // Protect public routes
+        children: [
+            {
+                path: 'login',
+                element: <Login />,
+            },
+            {
+                path: 'register',
+                element: <Register />,
+            },
+        ],
     },
-    {
-        path: "/register",
-        element: <Register/>,
-    }
 ]);
 export default router;
     

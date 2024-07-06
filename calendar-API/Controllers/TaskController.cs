@@ -21,19 +21,16 @@ public class TaskController : ControllerBase
 
     [HttpGet]
     [Authorize(Roles = AppRole.User)]
-    public async Task<ActionResult<IEnumerable<TaskResponse>>> GetTasks(int? taskId)
+    public async Task<ActionResult<IEnumerable<TaskResponse>>> GetTasks()
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         IQueryable<TodoTask> query = _context.TodoTasks.Include(t => t.Priority)
             .Where(t => t.UserId == userId);
 
-        if (taskId.HasValue)
-        {
-            query = query.Where(t => t.TaskId == taskId.Value);
-        }
 
         var tasks = await query.Select(t => new TaskResponse
         {
+            TaskId = t.TaskId,
             Title = t.Title,
             Description = t.Description,
             Date = t.Date.ToString("dd-MM-yyyy"),
@@ -45,15 +42,48 @@ public class TaskController : ControllerBase
         return Ok(tasks);
     }
 
+    [HttpGet("{taskId}")]
+    [Authorize(Roles = AppRole.User)]
+    public async Task<ActionResult<TaskResponse>> GetTaskById(int taskId)
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        var task = await _context.TodoTasks
+            .Include(t => t.Priority)
+            .Where(t => t.UserId == userId && t.TaskId == taskId)
+            .Select(t => new TaskResponse
+            {
+                TaskId = t.TaskId,
+                Title = t.Title,
+                Description = t.Description,
+                Date = t.Date.ToString("dd-MM-yyyy"),
+                StartTime = t.StartTime,
+                EndTime = t.EndTime,
+                PriorityName = t.Priority.PriorityName
+            })
+            .FirstOrDefaultAsync();
+
+        if (task == null)
+        {
+            return NotFound("Task not found");
+        }
+
+        return Ok(task);
+    }
+
+
     [HttpGet]
     [Authorize(Roles = AppRole.User)]
     public async Task<ActionResult<IEnumerable<TaskResponse>>> GetTasksByDate(DateTime date)
     {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+
         var tasks = await _context.TodoTasks
             .Include(t => t.Priority)
-            .Where(t => t.Date == date)
+            .Where(t => t.UserId == userId && t.Date == date)
             .Select(t => new TaskResponse
             {
+                TaskId = t.TaskId,
                 Title = t.Title,
                 Description = t.Description,
                 Date = t.Date.ToString("dd-MM-yyyy"),
@@ -91,6 +121,54 @@ public class TaskController : ControllerBase
         return Ok(newTask);
     }
 
+    [HttpPut("{taskId}")]
+    [Authorize(Roles = AppRole.User)]
+    public async Task<ActionResult<TaskRequest>> UpdateTask(int taskId, TaskRequest task)
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        if (userId == null)
+            return Unauthorized("Invalid user");
+
+        var taskToUpdate = await _context.TodoTasks
+            .FirstOrDefaultAsync(t => t.TaskId == taskId && t.UserId == userId);
+
+        if (taskToUpdate == null)
+            return NotFound("Task not found");
+
+        taskToUpdate.Title = task.Title;
+        taskToUpdate.Description = task.Description;
+        taskToUpdate.Date = DateTime.Parse(task.Date);
+        taskToUpdate.StartTime = task.StartTime;
+        taskToUpdate.EndTime = task.EndTime;
+        taskToUpdate.PriorityId = task.PriorityId;
+
+        await _context.SaveChangesAsync();
+
+        return Ok(task);
+    }
+
+    [HttpDelete("{taskId}")]
+    [Authorize(Roles = AppRole.User)]
+    public async Task<ActionResult> DeleteTask(int taskId)
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        if (userId == null)
+            return Unauthorized("Invalid user");
+
+        var taskToDelete = await _context.TodoTasks
+            .FirstOrDefaultAsync(t => t.TaskId == taskId && t.UserId == userId);
+
+        if (taskToDelete == null)
+            return NotFound("Task not found");
+
+        _context.TodoTasks.Remove(taskToDelete);
+        await _context.SaveChangesAsync();
+
+        return Ok();
+    }
+    
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Priority>>> GetPriorities()
     {

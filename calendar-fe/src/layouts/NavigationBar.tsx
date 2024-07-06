@@ -12,7 +12,7 @@ const NavigationBar = () => {
         <div className="relative">
             <div className="absolute top-0 end-0">
                 <NavLink
-                    to="/login"
+                    to="/auth/login"
                     className="p-2 ml-2 text-lg rounded hover:bg-gray-200 font-semibold text-gray-700"
                     onClick={handleLogout}
                 >

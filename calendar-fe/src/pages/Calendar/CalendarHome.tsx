@@ -1,13 +1,11 @@
-﻿import React, {useEffect, useState} from 'react';
-import {Alert, BadgeProps, CalendarProps, theme} from 'antd';
-import {Badge, Calendar} from 'antd';
-import type {Dayjs} from 'dayjs';
+﻿import React, { useEffect, useState } from 'react';
+import { Alert, Badge, Calendar, message } from 'antd';
+import type { Dayjs } from 'dayjs';
 import dayjs from 'dayjs';
 import agent from "../../api/agent";
-import {todoTask} from "../../models/todoTask";
-import {useNavigate} from "react-router-dom";
+import { todoTask } from "../../models/todoTask";
+import { useNavigate } from "react-router-dom";
 import AddTask from "../Task/AddTask";
-
 
 const CalendarHome: React.FC = () => {
     const [value, setValue] = useState(() => dayjs());
@@ -15,20 +13,23 @@ const CalendarHome: React.FC = () => {
     const [tasks, setTasks] = useState<todoTask[]>([])
 
     useEffect(() => {
-        agent.TodoTask.get()
-            .then((data: todoTask[]) => {
-                setTasks(data)
-            })
-            .catch(error => console.log(error))
-    }, [tasks]);
+        fetchTasks();
+    }, []);
 
-    const {token} = theme.useToken();
+    const fetchTasks = async () => {
+        try {
+            const data = await agent.TodoTask.get();
+            setTasks(data);
+        } catch (error) {
+            console.error("Failed to fetch tasks:", error);
+            message.error("Failed to fetch tasks");
+        }
+    };
 
-    const wrapperStyle: React.CSSProperties = {
-        maxWidth: '100%', 
-        border: `1px solid ${token.colorBorderSecondary}`,
-        borderRadius: token.borderRadiusLG,
-        margin: '0 auto', 
+    const navigate = useNavigate();
+
+    const handleDoubleClick = (date: Dayjs) => {
+        navigate('/taskList', { state: { date: date.format('YYYY-MM-DD') } });
     };
 
     const getListData = (value: Dayjs) => {
@@ -41,34 +42,22 @@ const CalendarHome: React.FC = () => {
             }));
     };
 
-    let navigate = useNavigate();
-
-    const handleDoubleClick = (date: Dayjs) => {
-        navigate('/taskList', {state: {date: date.format('DD-MM-YYYY')}});
-    };
-
     const dateCellRender = (value: Dayjs) => {
         const listData = getListData(value);
         return (
             <ul className="events" onDoubleClick={() => handleDoubleClick(value)}>
                 {listData.map((item, index) => (
                     <li key={index}>
-                        <Badge status={item.type as BadgeProps['status']} text={item.content}/>
+                        <Badge status={item.type as any} text={item.content} />
                     </li>
                 ))}
             </ul>
         );
     };
 
-    const cellRender: CalendarProps<Dayjs>['cellRender'] = (current, info) => {
-        if (info.type === 'date') return dateCellRender(current);
-        return info.originNode;
-    };
-
     const onSelect = (newValue: Dayjs) => {
         setValue(newValue);
         setSelectedValue(newValue);
-        console.log(newValue.format('DD-MM-YYYY'));
     };
 
     const onPanelChange = (newValue: Dayjs) => {
@@ -77,15 +66,15 @@ const CalendarHome: React.FC = () => {
 
     return (
         <div className="grid grid-cols-4">
-            <div style={wrapperStyle} className="col-span-3">
-                <Alert message={`You selected date: ${selectedValue?.format('DD-MM-YYYY')}`}/>
-                <Calendar value={value} onSelect={onSelect} cellRender={cellRender}/>
+            <div className="col-span-3">
+                <Alert message={`You selected date: ${selectedValue?.format('DD-MM-YYYY')}`} />
+                <Calendar value={value} onSelect={onSelect} onPanelChange={onPanelChange} cellRender={dateCellRender}/>
             </div>
             <div className="mx-auto">
-                <AddTask/>
+                <AddTask onSuccess={() => fetchTasks()} />
             </div>
         </div>
-    )
+    );
 };
 
 export default CalendarHome;

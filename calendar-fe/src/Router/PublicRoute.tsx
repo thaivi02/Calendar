@@ -6,9 +6,9 @@ const useAuth = () => {
     return !!token;
 };
 
-const PrivateRoute = () => {
+const PublicRoute = () => {
     const isAuth = useAuth();
-    return isAuth ? <Outlet /> : <Navigate to="/auth/login" />;
+    return isAuth ? <Navigate to="/" /> : <Outlet />;
 };
 
-export default PrivateRoute;
+export default PublicRoute;
