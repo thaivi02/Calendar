@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace calendar_API.Models
 {
     public partial class TodoTask
     {
+        [Key]
         public int TaskId { get; set; }
         public string Title { get; set; } = null!;
         public string Description { get; set; } = null!;

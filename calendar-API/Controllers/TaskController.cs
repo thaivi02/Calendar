@@ -4,11 +4,13 @@ using calendar_API.Helpers;
 using calendar_API.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OData.Query;
 using Microsoft.EntityFrameworkCore;
 
 namespace calendar_API.Controllers;
 
 [ApiController]
+[Authorize(Roles = AppRole.User)]
 [Route("api/[controller]/[action]")]
 public class TaskController : ControllerBase
 {
@@ -20,7 +22,7 @@ public class TaskController : ControllerBase
     }
 
     [HttpGet]
-    [Authorize(Roles = AppRole.User)]
+    [EnableQuery]
     public async Task<ActionResult<IEnumerable<TaskResponse>>> GetTasks()
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -43,7 +45,6 @@ public class TaskController : ControllerBase
     }
 
     [HttpGet("{taskId}")]
-    [Authorize(Roles = AppRole.User)]
     public async Task<ActionResult<TaskResponse>> GetTaskById(int taskId)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -70,9 +71,7 @@ public class TaskController : ControllerBase
         return Ok(task);
     }
 
-
     [HttpGet]
-    [Authorize(Roles = AppRole.User)]
     public async Task<ActionResult<IEnumerable<TaskResponse>>> GetTasksByDate(DateTime date)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -96,7 +95,6 @@ public class TaskController : ControllerBase
     }
 
     [HttpPost]
-    [Authorize(Roles = AppRole.User)]
     public async Task<ActionResult<TodoTask>> AddTask(TaskRequest task)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -122,7 +120,6 @@ public class TaskController : ControllerBase
     }
 
     [HttpPut("{taskId}")]
-    [Authorize(Roles = AppRole.User)]
     public async Task<ActionResult<TaskRequest>> UpdateTask(int taskId, TaskRequest task)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -149,7 +146,6 @@ public class TaskController : ControllerBase
     }
 
     [HttpDelete("{taskId}")]
-    [Authorize(Roles = AppRole.User)]
     public async Task<ActionResult> DeleteTask(int taskId)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);

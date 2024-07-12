@@ -90,6 +90,8 @@ const TaskList = () => {
 
     return (
         <div className="flex justify-center items-center min-h-screen">
+            <div className="w-full max-w-3xl">
+                <h1 className="text-2xl font-bold text-center mb-4">Task Management</h1>
             <Card title={`Tasks for ${date}`} className="w-full max-w-3xl">
                 {tasks.length === 0 ? (
                     <Empty description="No tasks found for this date" />
@@ -128,6 +130,7 @@ const TaskList = () => {
                     ))
                 )}
             </Card>
+            </div>
             {currentTask && (
                 <EditTaskModal
                     isOpen={isModalOpen}

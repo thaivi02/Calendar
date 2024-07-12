@@ -1,4 +1,5 @@
 ﻿import axios, {AxiosResponse} from "axios";
+import {toast} from "react-toastify";
 
 axios.defaults.baseURL = process.env.REACT_APP_API_BASE_URL;
 axios.defaults.withCredentials = true;
@@ -7,6 +8,7 @@ const responseBody = (resp: AxiosResponse) => resp.data;
 
 axios.interceptors.request.use(
     config => {
+        deleteExpiredToken();
         const token = localStorage.getItem('token');
         if (token) {
             config.headers.Authorization = `Bearer ${token}`;
@@ -17,6 +19,23 @@ axios.interceptors.request.use(
         return Promise.reject(error);
     }
 );
+
+const deleteExpiredToken = () => {
+    const token = localStorage.getItem("token");
+    if (token) {
+        try {
+            const { exp } = JSON.parse(atob(token.split(".")[1]));
+            const expirationTime = new Date(exp * 1000);
+            if (expirationTime < new Date()) {
+                localStorage.removeItem("token");
+                window.location.href = "/auth/login";
+            }
+        } catch (error) {
+            // Handle any errors in parsing the token
+            console.error("Error deleting expired token:", error);
+        }
+    }
+};
 
 const TodoTask={
     get: () => axios.get('Task/GetTasks').then(responseBody),
