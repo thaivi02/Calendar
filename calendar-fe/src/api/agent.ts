@@ -1,5 +1,4 @@
 ﻿import axios, {AxiosResponse} from "axios";
-import {toast} from "react-toastify";
 
 axios.defaults.baseURL = process.env.REACT_APP_API_BASE_URL;
 axios.defaults.withCredentials = true;
@@ -38,21 +37,22 @@ const deleteExpiredToken = () => {
 };
 
 const TodoTask={
-    get: () => axios.get('Task/GetTasks').then(responseBody),
-    create: (task: any) => axios.post('Task/AddTask',task).then(responseBody),
-    getTasksByDate: (date: string) => axios.get(`Task/GetTasksByDate`,{params:{date}}).then(responseBody),
-    getTaskById: (taskId: number) => axios.get(`Task/GetTaskById/${taskId}`).then(responseBody),
-    update: (taskId:number,task: any) => axios.put(`Task/UpdateTask/${taskId}`,task).then(responseBody),
-    detele: (taskId: number) => axios.delete(`Task/DeleteTask/${taskId}`).then(responseBody),
+    get: () => axios.get('odata/Task/GetTasks').then(responseBody),
+    create: (task: any) => axios.post('odata/Task/AddTask',task).then(responseBody),
+    getTasksByDate: (date: string) => axios.get(`odata/Task/GetTasksByDate`,{params:{date}}).then(responseBody),
+    getTaskById: (taskId: number) => axios.get(`odata/Task/GetTaskById/${taskId}`).then(responseBody),
+    update: (taskId:number,task: any) => axios.put(`odata/Task/UpdateTask/${taskId}`,task).then(responseBody),
+    detele: (taskId: number) => axios.delete(`odata/Task/DeleteTask/${taskId}`).then(responseBody),
 }
 
 const Priority={
-    list: () => axios.get('Task/GetPriorities').then(responseBody),
+    list: () => axios.get('odata/Task/GetPriorities').then(responseBody),
 }
 
 const auth = {
-    login: (user: any) => axios.post('account/login', user).then(responseBody),
-    register: (user: any) => axios.post('account/signup', user).then(responseBody),
+    login: (user: any) => axios.post('api/account/login', user).then(responseBody),
+    register: (user: any) => axios.post('api/account/signup', user).then(responseBody),
+    UserProfile: () => axios.get('api/account/userProfile').then(responseBody),
 }
 
 const agent ={

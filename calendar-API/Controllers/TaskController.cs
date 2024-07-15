@@ -5,14 +5,15 @@ using calendar_API.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Query;
+using Microsoft.AspNetCore.OData.Routing.Controllers;
 using Microsoft.EntityFrameworkCore;
 
 namespace calendar_API.Controllers;
 
 [ApiController]
+[Route("odata/[controller]/[action]")]
 [Authorize(Roles = AppRole.User)]
-[Route("api/[controller]/[action]")]
-public class TaskController : ControllerBase
+public class TaskController : ODataController
 {
     private readonly todoappContext _context;
 

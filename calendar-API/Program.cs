@@ -11,11 +11,12 @@ using Microsoft.OpenApi.Models;
 var builder = WebApplication.CreateBuilder(args);
 
 var modelBuilder = new ODataConventionModelBuilder();
-modelBuilder.EntitySet<TodoTask>("TodoTasks");
 
-// Add services to the container.
-builder.Services.AddControllers().AddOData(x => x.Select().Filter().OrderBy().Expand().Count().SetMaxTop(100));
-   
+modelBuilder.EntitySet<TodoTask>("Task");
+
+builder.Services.AddControllers().AddOData(x => x.Select().Filter()
+    .OrderBy().Expand().Count().SetMaxTop(100)
+    .AddRouteComponents("odata",modelBuilder.GetEdmModel()));
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

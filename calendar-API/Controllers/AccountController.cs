@@ -4,6 +4,7 @@ using System.Text;
 using calendar_API.DTOs;
 using calendar_API.Helpers;
 using calendar_API.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -52,7 +53,7 @@ public class AccountController : ControllerBase
         }
 
         await _userManager.AddToRoleAsync(user, AppRole.User);
-        
+
         return Ok("User created successfully");
     }
 
@@ -69,6 +70,7 @@ public class AccountController : ControllerBase
         var authClaims = new List<Claim>
         {
             new(ClaimTypes.NameIdentifier, user.Id),
+            new(ClaimTypes.Name, user.UserName),
             new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
         };
 
@@ -77,17 +79,38 @@ public class AccountController : ControllerBase
         {
             authClaims.Add(new Claim(ClaimTypes.Role, role));
         }
-        
+
         var authKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]));
 
         var token = new JwtSecurityToken(
             issuer: _configuration["JWT:ValidIssuer"],
             audience: _configuration["JWT:ValidAudience"],
-            expires: DateTime.Now.AddMinutes(30), 
+            expires: DateTime.Now.AddMinutes(100),
             claims: authClaims,
             signingCredentials: new SigningCredentials(authKey, SecurityAlgorithms.HmacSha256)
         );
 
         return Ok(new { token = new JwtSecurityTokenHandler().WriteToken(token) });
+    }
+
+    [HttpGet]
+    [Authorize]
+    public async Task<ActionResult<UserProfileDto>> UserProfile()
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        var user = await _userManager.FindByIdAsync(userId);
+
+        if (user == null)
+        {
+            return NotFound();
+        }
+        
+        var userProfile = new UserProfileDto
+        {
+            UserName = user.UserName,
+            FullName = user.FullName
+        };
+
+        return Ok(userProfile);
     }
 }
