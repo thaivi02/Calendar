@@ -57,7 +57,7 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({ isOpen, onClose, onSave, 
     return (
         <Modal
             title="Edit Task"
-            visible={isOpen}
+            open={isOpen}
             onOk={handleSubmit}
             onCancel={onClose}
             okText="Save"

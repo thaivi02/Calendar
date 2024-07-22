@@ -31,6 +31,16 @@ const TaskList = () => {
     const fetchTasksByDate = async (date: string) => {
         try {
             const tasks = await agent.TodoTask.getTasksByDate(date);
+            // Sort tasks in ascending order by startTime, assuming startTime is in a 'HH:mm' format
+            tasks.sort((a:any, b:any) => {
+                const [hoursA, minutesA] = a.startTime.split(':').map(Number);
+                const [hoursB, minutesB] = b.startTime.split(':').map(Number);
+                const dateA = new Date();
+                dateA.setHours(hoursA, minutesA);
+                const dateB = new Date();
+                dateB.setHours(hoursB, minutesB);
+                return dateA.getTime() - dateB.getTime();
+            });
             setTasks(tasks);
         } catch (error) {
             console.error("Failed to fetch tasks", error);
@@ -59,7 +69,6 @@ const TaskList = () => {
     const handleModalSave = async (updatedTask: todoTask) => {
         try {
             await agent.TodoTask.update(updatedTask.taskId, updatedTask);
-            // Update the tasks list after a successful update
             const updatedTasks = tasks.map((task) =>
                 task.taskId === updatedTask.taskId ? updatedTask : task
             );
@@ -75,7 +84,6 @@ const TaskList = () => {
     const handleDeleteClick = async (taskId: number) => {
         try {
             await agent.TodoTask.detele(taskId);
-            // Remove the deleted task from tasks state
             setTasks(tasks.filter(task => task.taskId !== taskId));
             message.success("Task deleted successfully");
         } catch (error) {

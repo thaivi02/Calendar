@@ -7,6 +7,7 @@ import {Login} from "../pages/Auth/Login";
 import {Register} from "../pages/Auth/Register";
 import PublicRoute from "./PublicRoute";
 import {TaskList} from "../pages/Task";
+import {ChangePassword} from "../pages/Auth/ChangePassword";
 
 
 const router = createBrowserRouter([
@@ -26,6 +27,10 @@ const router = createBrowserRouter([
                         path: 'taskList',
                         element: <TaskList />,
                     },
+                    {
+                        path:'changePassword',
+                        element: <ChangePassword/>
+                    }
                 ],
             },
         ],

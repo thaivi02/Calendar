@@ -16,9 +16,8 @@ modelBuilder.EntitySet<TodoTask>("Task");
 
 builder.Services.AddControllers().AddOData(x => x.Select().Filter()
     .OrderBy().Expand().Count().SetMaxTop(100)
-    .AddRouteComponents("odata",modelBuilder.GetEdmModel()));
+    .AddRouteComponents("odata", modelBuilder.GetEdmModel()));
 
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddDbContext<todoappContext>(options =>
@@ -90,7 +89,13 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseCors(opt => { opt.AllowAnyHeader().AllowAnyMethod().AllowCredentials().WithOrigins("http://localhost:3000"); });
+app.UseCors(opt =>
+{
+    opt.AllowAnyHeader()
+        .AllowAnyMethod()
+        .AllowCredentials()
+        .WithOrigins("http://localhost:3000");
+});
 
 app.UseHttpsRedirection();
 

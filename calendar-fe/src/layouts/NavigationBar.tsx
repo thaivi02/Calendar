@@ -26,9 +26,13 @@ const NavigationBar = () => {
 
     const items: MenuProps['items'] = [
         {
+            label: <a href="/changePassword" ><p className={"text-red-500 font-medium text-center"}>Change Password</p></a>,
+            key: '0',
+        },
+        {
             label: <a href="/auth/login" ><p className={"text-red-500 font-medium text-center"}>Logout</p></a>,
             onClick: handleLogout,
-            key: '0',
+            key: '1',
         },
     ];
 

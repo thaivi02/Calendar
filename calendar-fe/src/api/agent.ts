@@ -53,6 +53,7 @@ const auth = {
     login: (user: any) => axios.post('api/account/login', user).then(responseBody),
     register: (user: any) => axios.post('api/account/signup', user).then(responseBody),
     UserProfile: () => axios.get('api/account/userProfile').then(responseBody),
+    changePassword:(password:any)=>axios.post('api/account/changePassword', password).then(responseBody),
 }
 
 const agent ={

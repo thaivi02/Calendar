@@ -34,6 +34,11 @@ public class AccountController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> SignupAsync(RegisterDto registerDto)
     {
+        if (registerDto.Password != registerDto.ConfirmPassword)
+        {
+            return BadRequest("Password and confirmation password do not match");
+        }
+        
         var user = new AppUser
         {
             UserName = registerDto.UserName,
@@ -93,6 +98,33 @@ public class AccountController : ControllerBase
         return Ok(new { token = new JwtSecurityTokenHandler().WriteToken(token) });
     }
 
+    [HttpPost]
+    [Authorize]
+    public async Task<IActionResult> ChangePasswordAsync(ChangePasswordDto changePasswordDto)
+    {
+        if (changePasswordDto.NewPassword != changePasswordDto.ConfirmPassword)
+        {
+            return BadRequest("New password and confirmation password do not match");
+        }
+        
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        var user = await _userManager.FindByIdAsync(userId);
+
+        if (user == null)
+        {
+            return NotFound("User not found");
+        }
+
+        var result = await _userManager.ChangePasswordAsync(user, changePasswordDto.OldPassword, changePasswordDto.NewPassword);
+
+        if (!result.Succeeded)
+        {
+            return BadRequest(result.Errors);
+        }
+
+        return Ok("Password changed successfully");
+    }
+    
     [HttpGet]
     [Authorize]
     public async Task<ActionResult<UserProfileDto>> UserProfile()

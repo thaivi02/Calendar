@@ -1,8 +1,9 @@
 ﻿import React, { useEffect, useState } from 'react';
 import { Button, DatePicker, Form, Input, message, Select, TimePicker, Typography } from "antd";
-import { Dayjs } from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 import agent from "../../api/agent";
 import { priority } from "../../models/priority";
+import {now} from "moment";
 
 const priorityMapping: { [key: number]: string } = {
     1: "Low",
@@ -89,7 +90,7 @@ const AddTask: React.FC<AddTaskProps> = ({ onSuccess }) => {
 
                 <Form.Item name="date" label="Date"
                            rules={[{ required: true, message: 'Please choose Date!' }]}>
-                    <DatePicker format="DD-MM-YYYY" />
+                    <DatePicker disabledDate={d => !d || d.isBefore(dayjs().startOf('day'), 'day')}  format="DD-MM-YYYY" />
                 </Form.Item>
 
                 <Form.Item name="startTime" label="Start Time"
