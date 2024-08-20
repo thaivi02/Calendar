@@ -1,9 +1,8 @@
-﻿import React, { useEffect, useState } from 'react';
-import { Button, DatePicker, Form, Input, message, Select, TimePicker, Typography } from "antd";
-import dayjs, { Dayjs } from "dayjs";
+﻿import React, {useEffect, useState} from 'react';
+import {Button, DatePicker, Form, Input, message, Select, TimePicker, Typography} from "antd";
+import dayjs from "dayjs";
 import agent from "../../api/agent";
-import { priority } from "../../models/priority";
-import {now} from "moment";
+import {priority} from "../../models/priority";
 
 const priorityMapping: { [key: number]: string } = {
     1: "Low",
@@ -15,7 +14,7 @@ interface AddTaskProps {
     onSuccess: () => void;
 }
 
-const AddTask: React.FC<AddTaskProps> = ({ onSuccess }) => {
+const AddTask: React.FC<AddTaskProps> = ({onSuccess}) => {
     const [form] = Form.useForm();
     const [priorities, setPriorities] = useState<priority[]>([]);
 
@@ -64,10 +63,10 @@ const AddTask: React.FC<AddTaskProps> = ({ onSuccess }) => {
             <Form
                 form={form}
                 name="basic"
-                labelCol={{ span: 8 }}
-                wrapperCol={{ span: 16 }}
-                style={{ maxWidth: 600 }}
-                initialValues={{ remember: true }}
+                labelCol={{span: 8}}
+                wrapperCol={{span: 16}}
+                style={{maxWidth: 600}}
+                initialValues={{remember: true}}
                 onFinish={handleSubmit}
                 onFinishFailed={onFinishFailed}
                 autoComplete="off"
@@ -75,28 +74,29 @@ const AddTask: React.FC<AddTaskProps> = ({ onSuccess }) => {
                 <Form.Item
                     label="Title"
                     name="title"
-                    rules={[{ required: true, message: 'Please input Title!' }]}
+                    rules={[{required: true, message: 'Please input Title!'}]}
                 >
-                    <Input />
+                    <Input/>
                 </Form.Item>
 
                 <Form.Item
                     label="Description"
                     name="description"
-                    rules={[{ required: true, message: 'Please input Description!' }]}
+                    rules={[{required: true, message: 'Please input Description!'}]}
                 >
-                    <Input.TextArea />
+                    <Input.TextArea/>
                 </Form.Item>
 
                 <Form.Item name="date" label="Date"
-                           rules={[{ required: true, message: 'Please choose Date!' }]}>
-                    <DatePicker disabledDate={d => !d || d.isBefore(dayjs().startOf('day'), 'day')}  format="DD-MM-YYYY" />
+                           rules={[{required: true, message: 'Please choose Date!'}]}>
+                    <DatePicker disabledDate={d => !d || d.isBefore(dayjs().startOf('day'), 'day')}
+                                format="DD-MM-YYYY"/>
                 </Form.Item>
 
                 <Form.Item name="startTime" label="Start Time"
-                           rules={[{ required: true, message: 'Please choose Start Time!' }]}
+                           rules={[{required: true, message: 'Please choose Start Time!'}]}
                 >
-                    <TimePicker format="HH:mm:ss" />
+                    <TimePicker format="HH:mm:ss"/>
                 </Form.Item>
 
                 <Form.Item
@@ -104,8 +104,8 @@ const AddTask: React.FC<AddTaskProps> = ({ onSuccess }) => {
                     label="End Time"
                     dependencies={['startTime']}
                     rules={[
-                        { required: true },
-                        ({ getFieldValue }) => ({
+                        {required: true},
+                        ({getFieldValue}) => ({
                             validator(_, value) {
                                 if (!value) {
                                     return Promise.reject(new Error('Please choose End Time!'));
@@ -119,13 +119,13 @@ const AddTask: React.FC<AddTaskProps> = ({ onSuccess }) => {
                         }),
                     ]}
                 >
-                    <TimePicker format="HH:mm:ss" />
+                    <TimePicker format="HH:mm:ss"/>
                 </Form.Item>
 
                 <Form.Item
                     name="priorityId"
                     label="Priority"
-                    rules={[{ required: true, message: 'Please select priority!' }]}
+                    rules={[{required: true, message: 'Please select priority!'}]}
                 >
                     <Select>
                         {priorities.map((priority: priority) => (
@@ -136,7 +136,7 @@ const AddTask: React.FC<AddTaskProps> = ({ onSuccess }) => {
                     </Select>
                 </Form.Item>
 
-                <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+                <Form.Item wrapperCol={{offset: 8, span: 16}}>
                     <Button type="primary" htmlType="submit">
                         Add Task
                     </Button>

@@ -23,7 +23,7 @@ const deleteExpiredToken = () => {
     const token = localStorage.getItem("token");
     if (token) {
         try {
-            const { exp } = JSON.parse(atob(token.split(".")[1]));
+            const {exp} = JSON.parse(atob(token.split(".")[1]));
             const expirationTime = new Date(exp * 1000);
             if (expirationTime < new Date()) {
                 localStorage.removeItem("token");
@@ -36,16 +36,16 @@ const deleteExpiredToken = () => {
     }
 };
 
-const TodoTask={
+const TodoTask = {
     get: () => axios.get('odata/Task/GetTasks').then(responseBody),
-    create: (task: any) => axios.post('odata/Task/AddTask',task).then(responseBody),
-    getTasksByDate: (date: string) => axios.get(`odata/Task/GetTasksByDate`,{params:{date}}).then(responseBody),
+    create: (task: any) => axios.post('odata/Task/AddTask', task).then(responseBody),
+    getTasksByDate: (date: string) => axios.get(`odata/Task/GetTasksByDate`, {params: {date}}).then(responseBody),
     getTaskById: (taskId: number) => axios.get(`odata/Task/GetTaskById/${taskId}`).then(responseBody),
-    update: (taskId:number,task: any) => axios.put(`odata/Task/UpdateTask/${taskId}`,task).then(responseBody),
+    update: (taskId: number, task: any) => axios.put(`odata/Task/UpdateTask/${taskId}`, task).then(responseBody),
     detele: (taskId: number) => axios.delete(`odata/Task/DeleteTask/${taskId}`).then(responseBody),
 }
 
-const Priority={
+const Priority = {
     list: () => axios.get('odata/Task/GetPriorities').then(responseBody),
 }
 
@@ -53,10 +53,10 @@ const auth = {
     login: (user: any) => axios.post('api/account/login', user).then(responseBody),
     register: (user: any) => axios.post('api/account/signup', user).then(responseBody),
     UserProfile: () => axios.get('api/account/userProfile').then(responseBody),
-    changePassword:(password:any)=>axios.post('api/account/changePassword', password).then(responseBody),
+    changePassword: (password: any) => axios.post('api/account/changePassword', password).then(responseBody),
 }
 
-const agent ={
+const agent = {
     TodoTask,
     Priority,
     auth
