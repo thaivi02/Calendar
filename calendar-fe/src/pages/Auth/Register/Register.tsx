@@ -17,7 +17,7 @@ const Register = () => {
     const onFinish = async (values: any) => {
         try {
             await agent.auth.register(values);
-            navigate('/login'); // Redirect to the login page after successful registration
+            navigate('/auth/login'); // Redirect to the login page after successful registration
         } catch (error) {
             console.error('Registration failed', error);
         }
